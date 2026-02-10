@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DiffThat — Compare Text Like a Pro</title>
+  <meta name="description" content="A modern text comparison tool with side-by-side and unified diff views. Compare code, text, and files instantly." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⇋</text></svg>" />
+</head>
+<body>
+  <!-- Header -->
+  <header class="header" id="header">
+    <div class="header-left">
+      <div class="logo">
+        <span class="logo-icon">⇋</span>
+        <h1 class="logo-text">Diff<span class="logo-accent">That</span></h1>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="view-toggle" id="viewToggle">
+        <button class="view-btn active" data-view="split" id="splitViewBtn" title="Side-by-side view">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="18" rx="1"/><rect x="14" y="3" width="7" height="18" rx="1"/></svg>
+          <span>Split</span>
+        </button>
+        <button class="view-btn" data-view="unified" id="unifiedViewBtn" title="Unified view">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="1"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/></svg>
+          <span>Unified</span>
+        </button>
+      </div>
+      <button class="theme-btn" id="themeToggle" title="Toggle theme">
+        <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main">
+    <!-- Editor Panels -->
+    <section class="editors" id="editors">
+      <div class="editor-panel" id="leftPanel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            <span>Original</span>
+          </div>
+          <div class="panel-actions">
+            <label class="upload-btn" title="Upload file">
+              <input type="file" id="leftFileInput" hidden />
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            </label>
+          </div>
+        </div>
+        <div class="editor-wrap" id="leftEditorWrap">
+          <textarea class="editor" id="leftEditor" placeholder="Paste or type original text here..." spellcheck="false"></textarea>
+          <div class="drop-overlay" id="leftDropOverlay">
+            <div class="drop-icon">📄</div>
+            <div class="drop-text">Drop file here</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="editor-panel" id="rightPanel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            <span>Modified</span>
+          </div>
+          <div class="panel-actions">
+            <label class="upload-btn" title="Upload file">
+              <input type="file" id="rightFileInput" hidden />
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            </label>
+          </div>
+        </div>
+        <div class="editor-wrap" id="rightEditorWrap">
+          <textarea class="editor" id="rightEditor" placeholder="Paste or type modified text here..." spellcheck="false"></textarea>
+          <div class="drop-overlay" id="rightDropOverlay">
+            <div class="drop-icon">📄</div>
+            <div class="drop-text">Drop file here</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Toolbar -->
+    <section class="toolbar" id="toolbar">
+      <div class="toolbar-left">
+        <button class="btn btn-primary" id="compareBtn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
+          <span>Compare</span>
+        </button>
+        <button class="btn btn-secondary" id="swapBtn" title="Swap panels">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+          <span>Swap</span>
+        </button>
+        <button class="btn btn-secondary" id="clearBtn" title="Clear all">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+          <span>Clear</span>
+        </button>
+      </div>
+      <div class="toolbar-right">
+        <button class="btn btn-accent" id="sampleBtn" title="Load sample data">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          <span>Load Sample</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Diff Stats -->
+    <section class="stats-bar" id="statsBar" style="display: none;">
+      <div class="stat stat-added">
+        <span class="stat-icon">+</span>
+        <span class="stat-count" id="addedCount">0</span>
+        <span class="stat-label">additions</span>
+      </div>
+      <div class="stat stat-removed">
+        <span class="stat-icon">−</span>
+        <span class="stat-count" id="removedCount">0</span>
+        <span class="stat-label">deletions</span>
+      </div>
+      <div class="stat stat-unchanged">
+        <span class="stat-icon">≡</span>
+        <span class="stat-count" id="unchangedCount">0</span>
+        <span class="stat-label">unchanged</span>
+      </div>
+    </section>
+
+    <!-- Diff Output -->
+    <section class="diff-output" id="diffOutput" style="display: none;">
+      <div class="diff-container" id="diffContainer">
+        <!-- Diff rows will be rendered here -->
+      </div>
+    </section>
+
+    <!-- Empty State -->
+    <section class="empty-state" id="emptyState">
+      <div class="empty-icon">⇋</div>
+      <h2>Ready to compare</h2>
+      <p>Paste your text in the panels above and hit <strong>Compare</strong>, or load a sample to explore.</p>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <span>DiffThat &copy; 2026 — Compare text like a pro</span>
+  </footer>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
